@@ -1,0 +1,22 @@
+# Set default line endings for the repository.
+# Windows-native project — source lives with CRLF everywhere so diffs stay clean
+# regardless of the contributor's OS or editor.
+* text=auto eol=crlf
+
+# Explicit CRLF for text sources — belt-and-braces in case someone lowers text=auto.
+*.md         text eol=crlf
+*.py         text eol=crlf
+*.css        text eol=crlf
+*.yml        text eol=crlf
+*.yaml       text eol=crlf
+*.json       text eol=crlf
+
+# Shell scripts must stay LF — CRLF breaks execution on Linux/macOS.
+*.sh         text eol=lf
+
+# Binaries — hands off.
+*.png        binary
+*.jpg        binary
+*.jpeg       binary
+*.gif        binary
+*.ico        binary
