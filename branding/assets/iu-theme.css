@@ -4,11 +4,20 @@
    IU's Adobe CC Library behind brand.iu.edu's CAS login, which isn't
    reachable here -- if someone with access ever pulls the exact
    current value and it differs, swap it in here. */
-:root {
+/* mkdocs-material re-declares some tokens (footer colors included) on
+   [data-md-color-scheme="default"], which is set on <body> -- a plain
+   :root rule never reaches that element for those tokens, since a rule
+   matching an element directly always wins over inheritance from an
+   ancestor. Match the same selector shape so overrides apply everywhere
+   mkdocs-material actually looks them up. */
+:root,
+[data-md-color-scheme="default"] {
   --md-primary-fg-color: #990000;
   --md-primary-fg-color--light: #b23a3a;
   --md-primary-fg-color--dark: #660000;
   --md-accent-fg-color: #990000;
+  --md-footer-bg-color: #990000;
+  --md-footer-bg-color--dark: #660000;
 }
 
 /* IU's standard footer compliance links (see overrides/partials/copyright.html) */
