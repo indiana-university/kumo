@@ -9,6 +9,7 @@ and breaks a normal `git clone` on Windows.
 Regenerates docs/*.md and mkdocs.yml from scratch on every run, so the
 wiki stays the single source of truth. Do not hand-edit files in docs/.
 """
+import datetime
 import pathlib
 import re
 import shutil
@@ -112,15 +113,19 @@ def build_nav(home_md: str, slug_by_stem: dict[str, str]) -> list[tuple[str, str
 
 def write_mkdocs_yml(nav: list[tuple[str, str]]) -> None:
     nav_lines = "\n".join(f'  - "{title}": {path}' for title, path in nav)
+    year = datetime.date.today().year
     (REPO_ROOT / "mkdocs.yml").write_text(
         f"""site_name: Kumo
 site_url: https://kumo.iu.edu/
 site_description: Documentation for Kumo, Indiana University's cloud storage connector.
 repo_url: https://github.com/indiana-university/kumo
 edit_uri: ""
+copyright: "&copy; {year} The Trustees of Indiana University"
 
 theme:
   name: material
+  custom_dir: overrides
+  logo: assets/iu-trident.svg
   palette:
     primary: custom
     accent: custom
