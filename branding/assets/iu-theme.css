@@ -1,8 +1,9 @@
-/* Placeholder IU branding for the Kumo docs site.
-   Verify these values against IU's official brand toolkit
-   (brand.iu.edu) before this site goes live -- crimson below
-   is the well-known IU crimson but hasn't been checked against
-   current brand guidelines. */
+/* IU branding for the Kumo docs site.
+   #990000 is IU's long-standing public crimson (iu.edu, athletics,
+   print materials). The authoritative hex/RGB/Pantone values live in
+   IU's Adobe CC Library behind brand.iu.edu's CAS login, which isn't
+   reachable here -- if someone with access ever pulls the exact
+   current value and it differs, swap it in here. */
 :root {
   --md-primary-fg-color: #990000;
   --md-primary-fg-color--light: #b23a3a;
