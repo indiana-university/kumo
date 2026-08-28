@@ -1,0 +1,26 @@
+{#-
+  Overrides mkdocs-material's default copyright partial to add IU's standard
+  footer compliance links, matching the footer used across IU's own web
+  properties (see brand.iu.edu). Keep in sync with that footer if IU changes
+  the required links.
+-#}
+<div class="md-copyright">
+  <ul class="iu-footer-links">
+    <li><a href="https://accessibility.iu.edu/assistance/" target="_blank" rel="noopener">Accessibility</a></li>
+    <li><a href="https://www.iu.edu/college-scorecard.html" target="_blank" rel="noopener">College Scorecard</a></li>
+    <li><a href="https://www.iu.edu/open-to-all.html" target="_blank" rel="noopener">Open to All</a></li>
+    <li><a href="https://www.iu.edu/privacy/index.html" target="_blank" rel="noopener">Privacy Notice</a></li>
+    <li><a href="https://www.iu.edu/copyright/index.html" target="_blank" rel="noopener">Copyright</a></li>
+  </ul>
+  {% if config.copyright %}
+    <div class="md-copyright__highlight">
+      {{ config.copyright }}
+    </div>
+  {% endif %}
+  {% if not config.extra.generator == false %}
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  {% endif %}
+</div>
