@@ -234,3 +234,12 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+# MkDocs docs site: docs/ and mkdocs.yml are generated from the wiki by
+# scripts/sync_wiki.py at build time, and site/ is the built output -- none
+# of these are checked in, the wiki stays the single source of truth.
+/docs/
+/mkdocs.yml
+/site/
+__pycache__/
+
