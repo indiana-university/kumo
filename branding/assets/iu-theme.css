@@ -1,0 +1,11 @@
+/* Placeholder IU branding for the Kumo docs site.
+   Verify these values against IU's official brand toolkit
+   (brand.iu.edu) before this site goes live -- crimson below
+   is the well-known IU crimson but hasn't been checked against
+   current brand guidelines. */
+:root {
+  --md-primary-fg-color: #990000;
+  --md-primary-fg-color--light: #b23a3a;
+  --md-primary-fg-color--dark: #660000;
+  --md-accent-fg-color: #990000;
+}
