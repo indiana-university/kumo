@@ -120,7 +120,7 @@ site_url: https://kumo.iu.edu/
 site_description: Documentation for Kumo, Indiana University's cloud storage connector.
 repo_url: https://github.com/indiana-university/kumo
 edit_uri: ""
-copyright: "&copy; {year} The Trustees of Indiana University"
+copyright: "{year}"
 
 theme:
   name: material
