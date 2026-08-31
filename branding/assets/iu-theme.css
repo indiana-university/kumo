@@ -20,22 +20,37 @@
   --md-footer-bg-color--dark: #660000;
 }
 
-/* IU's standard footer compliance links (see overrides/partials/copyright.html) */
-.iu-footer-links {
+/* IU's standard single-line footer bar (see overrides/partials/copyright.html).
+   .md-copyright is stretched to fill the row so flex-end can push the bar
+   to the right, matching IU's own footer layout. */
+.md-footer-meta__inner .md-copyright {
+  flex: 1;
+}
+
+.iu-footer-bar {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 0 1em;
-  margin: 0 0 0.6em;
-  padding: 0;
-  list-style: none;
+  justify-content: flex-end;
+  gap: 0.5em 1.5em;
+  width: 100%;
 }
 
-.iu-footer-links a {
+/* mkdocs-material's ".md-typeset img{height:auto;max-width:100%}" rule has
+   higher specificity (class+element) than a bare .iu-footer-trident class
+   selector, so it wins regardless of load order -- match its specificity. */
+img.iu-footer-trident {
+  height: 1.1rem;
+  width: auto;
+  max-width: none;
+}
+
+.iu-footer-bar a {
   color: inherit;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
-.iu-footer-links a:hover {
+.iu-footer-bar a:hover {
   opacity: 1;
   text-decoration: underline;
 }
