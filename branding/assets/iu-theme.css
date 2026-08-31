@@ -1,9 +1,12 @@
 /* IU branding for the Kumo docs site.
-   #990000 is IU's long-standing public crimson (iu.edu, athletics,
-   print materials). The authoritative hex/RGB/Pantone values live in
-   IU's Adobe CC Library behind brand.iu.edu's CAS login, which isn't
-   reachable here -- if someone with access ever pulls the exact
-   current value and it differs, swap it in here. */
+   #990000 is confirmed as IU's official crimson via Rivet (IU's public
+   design system) -- both its published design tokens (rivet.iu.edu/
+   design-tokens) and its compiled CSS on npm/unpkg (rivet-core,
+   --rvt-color-crimson-500) give this exact value, no CAS login needed.
+   This file hand-rolls just a few tokens rather than depending on Rivet's
+   CSS directly, since mixing its full stylesheet with mkdocs-material's
+   would need care around class conflicts -- worth revisiting if this site
+   grows more IU chrome (see PR discussion). */
 /* mkdocs-material re-declares some tokens (footer colors included) on
    [data-md-color-scheme="default"], which is set on <body> -- a plain
    :root rule never reaches that element for those tokens, since a rule
