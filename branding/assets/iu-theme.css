@@ -17,7 +17,10 @@
   --md-primary-fg-color--dark: #660000;
   --md-accent-fg-color: #990000;
   --md-footer-bg-color: #990000;
-  --md-footer-bg-color--dark: #660000;
+  /* .md-footer-meta (the visible footer bar, since there's no prev/next nav)
+     uses this --dark variant, not --md-footer-bg-color -- keep it matching
+     the header's crimson exactly rather than the darker shade. */
+  --md-footer-bg-color--dark: #990000;
 }
 
 /* IU's standard single-line footer bar (see overrides/partials/copyright.html).
