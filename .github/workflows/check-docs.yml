@@ -3,7 +3,7 @@ name: Check Kumo docs build
 on:
   pull_request:
     paths:
-      - "scripts/sync_wiki.py"
+      - "scripts/sync_wiki.ps1"
       - "branding/**"
       - ".github/workflows/check-docs.yml"
       - ".github/workflows/deploy-docs.yml"
@@ -24,7 +24,8 @@ jobs:
         run: pip install mkdocs mkdocs-material
 
       - name: Sync wiki content
-        run: python scripts/sync_wiki.py
+        shell: pwsh
+        run: ./scripts/sync_wiki.ps1
 
       - name: Build site
         run: mkdocs build
