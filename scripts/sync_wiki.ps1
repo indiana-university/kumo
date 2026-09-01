@@ -26,20 +26,22 @@ $SkipFiles = @("_Sidebar.md", "_Footer.md", "Home.md")
 # Nav grouping is an editorial call, not something inferred from content --
 # add new pages here as they're added to the wiki. Anything unmapped falls
 # back to "Reference" with a warning rather than silently vanishing from nav.
-$GroupOrder = @("Getting Started", "Setup", "Broadcast", "Reference")
+$GroupOrder = @("Getting Started", "Access Broker Setup", "Reference")
 $GroupBySlug = @{
     "kumo-in-a-nutshell"                         = "Getting Started"
     "kumo-cloud-storage-connector"                = "Getting Started"
     "service-plan"                                = "Getting Started"
-    "portal-setup-onboarding"                     = "Setup"
-    "access-broker-agent-setup"                   = "Setup"
-    "portal-setup-storage-options"                = "Setup"
-    "client-setup-windows"                        = "Setup"
-    "client-setup-mac-os-x-no-longer-supported"   = "Setup"
-    "broadcast-overview"                          = "Broadcast"
-    "broadcast-setup-agent"                       = "Broadcast"
-    "broadcast-setup-portal"                      = "Broadcast"
-    "broadcast-usage"                             = "Broadcast"
+    "portal-setup-onboarding"                     = "Access Broker Setup"
+    "access-broker-agent-setup"                   = "Access Broker Setup"
+    "portal-setup-storage-options"                = "Access Broker Setup"
+    "client-setup-windows"                        = "Access Broker Setup"
+    "client-setup-mac-os-x-no-longer-supported"   = "Access Broker Setup"
+    # Broadcast is retired -- kept discoverable under Reference rather than
+    # its own top-level group, same treatment as the Mac OS X client page.
+    "broadcast-overview"                          = "Reference"
+    "broadcast-setup-agent"                       = "Reference"
+    "broadcast-setup-portal"                      = "Reference"
+    "broadcast-usage"                             = "Reference"
     "troubleshooting"                             = "Reference"
     "diagrams"                                    = "Reference"
     "release-notes-client"                        = "Reference"
