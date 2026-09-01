@@ -57,6 +57,12 @@ $BlobImgPattern = 'https://github\.com/indiana-university/kumo/(?:blob|raw)/[^/\
 $WikiLinkPattern = 'https://github\.com/indiana-university/kumo/wiki/([^\s)"''#\]]+)(#[^\s)"''\]]*)?'
 $WikilinkPattern = '\[\[([^\]|]+?)(?:\|([^\]]+))?\]\]'
 
+# The wiki's "Open a support ticket" link (mailform.kb.iu.edu, cid=1426) 404s --
+# IU retired that form. Redirect it to a working mailto rather than leaving a
+# dead link in place.
+$DeadSupportFormPattern = 'https://mailform\.kb\.iu\.edu/email\.php\?cid=1426'
+$DeadSupportFormReplacement = 'mailto:kumo@iu.edu'
+
 function Get-Slug([string]$Stem) {
     $slug = $Stem.Replace(":-", "-").Replace(":", "-").Replace(" ", "-")
     $slug = $slug -replace '[()]', ''
@@ -99,6 +105,7 @@ function Get-SlugMap([hashtable]$Files) {
 }
 
 function Update-Links([string]$Text, [hashtable]$SlugByStem) {
+    $Text = $Text -replace $DeadSupportFormPattern, $DeadSupportFormReplacement
     $Text = [regex]::Replace($Text, $BlobImgPattern, { param($m) $m.Groups[1].Value })
 
     $Text = [regex]::Replace($Text, $WikiLinkPattern, {
