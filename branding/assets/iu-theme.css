@@ -102,3 +102,26 @@ img.iu-footer-trident {
 .status-ok {
   color: #2e7d32;
 }
+
+/* Full-width banners for the status page's overall messages, matching the
+   legacy status page's green "all good" / blue "info" boxes. */
+.status-banner {
+  border-radius: 0.2rem;
+  padding: 0.75rem 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.status-banner a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.status-banner--ok {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.status-banner--info {
+  background: var(--md-code-bg-color);
+  border-left: 0.25rem solid #3f6ec6;
+}
