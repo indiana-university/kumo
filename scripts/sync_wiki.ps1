@@ -20,6 +20,7 @@ $DocsDir = Join-Path $RepoRoot "docs"
 $ImgSrc = Join-Path $RepoRoot "img"
 $BrandingAssetsSrc = Join-Path $RepoRoot "branding\assets"
 $CnameSrc = Join-Path $RepoRoot "branding\CNAME"
+$PagesSrc = Join-Path $RepoRoot "pages"
 
 $SkipFiles = @(
     "_Sidebar.md", "_Footer.md", "Home.md",
@@ -176,6 +177,10 @@ function Get-Nav([string]$HomeMd, [hashtable]$SlugByStem) {
             $nav[$groupName] = $groups[$groupName]
         }
     }
+    # Status is a hand-authored page (pages/status.md), not wiki content --
+    # inserted directly here since it's the only one; worth generalizing into
+    # a proper "extra pages" list if a second one shows up.
+    $nav["Status"] = "status.md"
     if ($SlugByStem.Values -contains "contact-us") {
         $nav[$slugToTitle["contact-us"]] = "contact-us.md"
     }
@@ -256,6 +261,7 @@ $homeRaw = if ($files.ContainsKey("Home.md")) { $files["Home.md"] } else { "" }
 if (Test-Path $ImgSrc) { Copy-Item -Path $ImgSrc -Destination (Join-Path $DocsDir "img") -Recurse }
 if (Test-Path $BrandingAssetsSrc) { Copy-Item -Path $BrandingAssetsSrc -Destination (Join-Path $DocsDir "assets") -Recurse }
 if (Test-Path $CnameSrc) { Copy-Item -Path $CnameSrc -Destination (Join-Path $DocsDir "CNAME") }
+if (Test-Path $PagesSrc) { Copy-Item -Path (Join-Path $PagesSrc "*.md") -Destination $DocsDir }
 
 Write-MkDocsYml (Get-Nav $homeRaw $slugByStem)
 
