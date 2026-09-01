@@ -23,6 +23,29 @@ $CnameSrc = Join-Path $RepoRoot "branding\CNAME"
 
 $SkipFiles = @("_Sidebar.md", "_Footer.md", "Home.md")
 
+# Nav grouping is an editorial call, not something inferred from content --
+# add new pages here as they're added to the wiki. Anything unmapped falls
+# back to "Reference" with a warning rather than silently vanishing from nav.
+$GroupOrder = @("Getting Started", "Setup", "Broadcast", "Reference")
+$GroupBySlug = @{
+    "kumo-in-a-nutshell"                         = "Getting Started"
+    "kumo-cloud-storage-connector"                = "Getting Started"
+    "service-plan"                                = "Getting Started"
+    "portal-setup-onboarding"                     = "Setup"
+    "access-broker-agent-setup"                   = "Setup"
+    "portal-setup-storage-options"                = "Setup"
+    "client-setup-windows"                        = "Setup"
+    "client-setup-mac-os-x-no-longer-supported"   = "Setup"
+    "broadcast-overview"                          = "Broadcast"
+    "broadcast-setup-agent"                       = "Broadcast"
+    "broadcast-setup-portal"                      = "Broadcast"
+    "broadcast-usage"                             = "Broadcast"
+    "troubleshooting"                             = "Reference"
+    "diagrams"                                    = "Reference"
+    "release-notes-client"                        = "Reference"
+    "software-development-life-cycle"             = "Reference"
+}
+
 $BlobImgPattern = 'https://github\.com/indiana-university/kumo/(?:blob|raw)/[^/\s)]+/(img/[^\s)"''\]]+)'
 $WikiLinkPattern = 'https://github\.com/indiana-university/kumo/wiki/([^\s)"''#\]]+)(#[^\s)"''\]]*)?'
 $WikilinkPattern = '\[\[([^\]|]+?)(?:\|([^\]]+))?\]\]'
@@ -116,15 +139,47 @@ function Get-Nav([string]$HomeMd, [hashtable]$SlugByStem) {
         $slugToTitle[$SlugByStem[$stem]] = $title
     }
 
+    $groups = [ordered]@{}
+    foreach ($groupName in $GroupOrder) { $groups[$groupName] = [ordered]@{} }
+
     $nav = [ordered]@{ "Home" = "index.md" }
     foreach ($slug in $orderedSlugs) {
-        $nav[$slugToTitle[$slug]] = "$slug.md"
+        if ($slug -eq "contact-us") { continue }
+        $title = $slugToTitle[$slug]
+        $group = if ($GroupBySlug.ContainsKey($slug)) { $GroupBySlug[$slug] } else {
+            Write-Warning "No nav group mapped for '$slug' -- adding to Reference"
+            "Reference"
+        }
+        $groups[$group][$title] = "$slug.md"
+    }
+    foreach ($groupName in $GroupOrder) {
+        if ($groups[$groupName].Count -gt 0) {
+            $nav[$groupName] = $groups[$groupName]
+        }
+    }
+    if ($SlugByStem.Values -contains "contact-us") {
+        $nav[$slugToTitle["contact-us"]] = "contact-us.md"
     }
     return $nav
 }
 
+function ConvertTo-NavYaml($Nav, [int]$Indent = 1) {
+    $pad = "  " * $Indent
+    $lines = foreach ($key in $Nav.Keys) {
+        $value = $Nav[$key]
+        if ($value -is [System.Collections.Specialized.OrderedDictionary]) {
+            "$pad- `"$key`":"
+            ConvertTo-NavYaml $value ($Indent + 1)
+        }
+        else {
+            "$pad- `"$key`": $value"
+        }
+    }
+    return $lines -join "`n"
+}
+
 function Write-MkDocsYml([System.Collections.Specialized.OrderedDictionary]$Nav) {
-    $navLines = ($Nav.Keys | ForEach-Object { "  - `"$_`": $($Nav[$_])" }) -join "`n"
+    $navLines = ConvertTo-NavYaml $Nav
     $year = (Get-Date).Year
     $yaml = @"
 site_name: Kumo
