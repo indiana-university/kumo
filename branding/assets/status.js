@@ -9,11 +9,6 @@
   var HISTORY_URL = "https://servicenow.iu.edu/status?id=iu_service_status&service=BSN0001274";
   var TYPE_ORDER = ["Alert", "Ongoing", "Maintenance"];
 
-  // No public Kumo Portal /health endpoint exists yet (tracked in
-  // Kumo-Server-Blazor) -- leave blank until one does, so this degrades to
-  // "not available yet" instead of failing.
-  var PORTAL_HEALTH_URL = "";
-
   function isCurrentlyVisible(notice, now) {
     var start = notice.visibleStart ? new Date(notice.visibleStart) : null;
     var end = notice.visibleEnd ? new Date(notice.visibleEnd) : null;
@@ -92,23 +87,5 @@
       });
   }
 
-  function loadPortalHealth() {
-    var container = document.getElementById("portal-health");
-    if (!PORTAL_HEALTH_URL) {
-      container.innerHTML = '<p class="status-unknown">Live Portal status isn’t available yet.</p>';
-      return;
-    }
-    fetch(PORTAL_HEALTH_URL, { cache: "no-store" })
-      .then(function (res) {
-        container.innerHTML = res.ok
-          ? '<p class="status-ok">Kumo Portal is reachable.</p>'
-          : '<p class="status-down">Kumo Portal returned an error (HTTP ' + res.status + ').</p>';
-      })
-      .catch(function () {
-        container.innerHTML = '<p class="status-down">Kumo Portal appears to be unreachable.</p>';
-      });
-  }
-
   loadNotices();
-  loadPortalHealth();
 })();
