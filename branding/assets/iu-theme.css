@@ -1,18 +1,9 @@
 /* IU branding for the Kumo docs site.
-   #990000 is confirmed as IU's official crimson via Rivet (IU's public
-   design system) -- both its published design tokens (rivet.iu.edu/
-   design-tokens) and its compiled CSS on npm/unpkg (rivet-core,
-   --rvt-color-crimson-500) give this exact value, no CAS login needed.
-   This file hand-rolls just a few tokens rather than depending on Rivet's
-   CSS directly, since mixing its full stylesheet with mkdocs-material's
-   would need care around class conflicts -- worth revisiting if this site
-   grows more IU chrome (see PR discussion). */
-/* mkdocs-material re-declares some tokens (footer colors included) on
-   [data-md-color-scheme="default"], which is set on <body> -- a plain
-   :root rule never reaches that element for those tokens, since a rule
-   matching an element directly always wins over inheritance from an
-   ancestor. Match the same selector shape so overrides apply everywhere
-   mkdocs-material actually looks them up. */
+   #990000 is IU's official crimson per Rivet's public design tokens
+   (rivet.iu.edu/design-tokens, --rvt-color-crimson-500). */
+
+/* mkdocs-material re-declares these on [data-md-color-scheme="default"]
+   (set on <body>), which beats a plain :root rule -- match its selector. */
 :root,
 [data-md-color-scheme="default"] {
   --md-primary-fg-color: #990000;
@@ -20,15 +11,11 @@
   --md-primary-fg-color--dark: #660000;
   --md-accent-fg-color: #990000;
   --md-footer-bg-color: #990000;
-  /* .md-footer-meta (the visible footer bar, since there's no prev/next nav)
-     uses this --dark variant, not --md-footer-bg-color -- keep it matching
-     the header's crimson exactly rather than the darker shade. */
+  /* .md-footer-meta uses --dark, not --md-footer-bg-color. */
   --md-footer-bg-color--dark: #990000;
 }
 
-/* IU's standard single-line footer bar (see overrides/partials/copyright.html).
-   .md-copyright is stretched to fill the row so flex-end can push the bar
-   to the right, matching IU's own footer layout. */
+/* Stretch .md-copyright so flex-end can right-align the footer bar. */
 .md-footer-meta__inner .md-copyright {
   flex: 1;
 }
@@ -42,9 +29,7 @@
   width: 100%;
 }
 
-/* mkdocs-material's ".md-typeset img{height:auto;max-width:100%}" rule has
-   higher specificity (class+element) than a bare .iu-footer-trident class
-   selector, so it wins regardless of load order -- match its specificity. */
+/* .md-typeset img has higher specificity (class+element); match it. */
 img.iu-footer-trident {
   height: 1.1rem;
   width: auto;
