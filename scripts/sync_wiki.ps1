@@ -21,31 +21,36 @@ $ImgSrc = Join-Path $RepoRoot "img"
 $BrandingAssetsSrc = Join-Path $RepoRoot "branding\assets"
 $CnameSrc = Join-Path $RepoRoot "branding\CNAME"
 
-$SkipFiles = @("_Sidebar.md", "_Footer.md", "Home.md")
+$SkipFiles = @(
+    "_Sidebar.md", "_Footer.md", "Home.md",
+    # Retired / no longer supported -- excluded from the built site entirely,
+    # not just hidden from nav. Links to these from other pages fall back to
+    # the original wiki URL instead of a broken relative link.
+    "Client-Setup:-Mac-OS-X-(No-longer-supported).md",
+    "Broadcast:-Overview.md",
+    "Broadcast-Setup:-Agent.md",
+    "Broadcast-Setup:-Portal.md",
+    "Broadcast:-Usage.md"
+)
 
 # Nav grouping is an editorial call, not something inferred from content --
 # add new pages here as they're added to the wiki. Anything unmapped falls
-# back to "Reference" with a warning rather than silently vanishing from nav.
-$GroupOrder = @("Getting Started", "Access Broker Setup", "Reference")
+# back to "References" with a warning rather than silently vanishing from
+# nav. A group left with only one page renders as a flat top-level link
+# instead of a one-item dropdown -- see Get-Nav.
+$GroupOrder = @("Getting Started", "Access Broker", "Client", "Portal", "References")
 $GroupBySlug = @{
-    "kumo-in-a-nutshell"                         = "Getting Started"
-    "kumo-cloud-storage-connector"                = "Getting Started"
-    "service-plan"                                = "Getting Started"
-    "portal-setup-onboarding"                     = "Access Broker Setup"
-    "access-broker-agent-setup"                   = "Access Broker Setup"
-    "portal-setup-storage-options"                = "Access Broker Setup"
-    "client-setup-windows"                        = "Access Broker Setup"
-    "client-setup-mac-os-x-no-longer-supported"   = "Access Broker Setup"
-    # Broadcast is retired -- kept discoverable under Reference rather than
-    # its own top-level group, same treatment as the Mac OS X client page.
-    "broadcast-overview"                          = "Reference"
-    "broadcast-setup-agent"                       = "Reference"
-    "broadcast-setup-portal"                      = "Reference"
-    "broadcast-usage"                             = "Reference"
-    "troubleshooting"                             = "Reference"
-    "diagrams"                                    = "Reference"
-    "release-notes-client"                        = "Reference"
-    "software-development-life-cycle"             = "Reference"
+    "kumo-in-a-nutshell"               = "Getting Started"
+    "kumo-cloud-storage-connector"      = "Getting Started"
+    "service-plan"                      = "Getting Started"
+    "access-broker-agent-setup"         = "Access Broker"
+    "client-setup-windows"              = "Client"
+    "portal-setup-onboarding"           = "Portal"
+    "portal-setup-storage-options"      = "Portal"
+    "troubleshooting"                   = "References"
+    "diagrams"                          = "References"
+    "release-notes-client"              = "References"
+    "software-development-life-cycle"   = "References"
 }
 
 $BlobImgPattern = 'https://github\.com/indiana-university/kumo/(?:blob|raw)/[^/\s)]+/(img/[^\s)"''\]]+)'
@@ -149,13 +154,18 @@ function Get-Nav([string]$HomeMd, [hashtable]$SlugByStem) {
         if ($slug -eq "contact-us") { continue }
         $title = $slugToTitle[$slug]
         $group = if ($GroupBySlug.ContainsKey($slug)) { $GroupBySlug[$slug] } else {
-            Write-Warning "No nav group mapped for '$slug' -- adding to Reference"
-            "Reference"
+            Write-Warning "No nav group mapped for '$slug' -- adding to References"
+            "References"
         }
         $groups[$group][$title] = "$slug.md"
     }
     foreach ($groupName in $GroupOrder) {
-        if ($groups[$groupName].Count -gt 0) {
+        if ($groups[$groupName].Count -eq 1) {
+            # A single-page group is a dropdown with one option -- flatten it
+            # to a direct link instead of making people click twice.
+            $nav[$groupName] = $groups[$groupName].Values[0]
+        }
+        elseif ($groups[$groupName].Count -gt 1) {
             $nav[$groupName] = $groups[$groupName]
         }
     }
