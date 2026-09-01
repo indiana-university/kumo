@@ -52,12 +52,14 @@
 
   function renderNotices(notices) {
     var container = document.getElementById("kumo-storage-notices");
-    var historyLink = '<p><a href="' + HISTORY_URL + '" target="_blank" rel="noopener">Complete notice history</a></p>';
+    var historyLink =
+      '<div class="status-banner status-banner--info">Complete notice history is available ' +
+      '<a href="' + HISTORY_URL + '" target="_blank" rel="noopener">here</a>.</div>';
 
     if (!notices.length) {
       container.innerHTML =
-        '<p class="status-ok">No known service interruptions at this time. If you’re experiencing an issue, ' +
-        '<a href="mailto:kumo@iu.edu">reach out to us</a>.</p>' + historyLink;
+        '<div class="status-banner status-banner--ok">No known service interruptions at this time. If you’re experiencing an issue, ' +
+        '<a href="mailto:kumo@iu.edu">reach out to us</a>.</div>' + historyLink;
       return;
     }
 
