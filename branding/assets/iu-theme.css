@@ -45,3 +45,40 @@ img.iu-footer-trident {
   opacity: 1;
   text-decoration: underline;
 }
+
+/* Status page notice cards, colored by notice type. */
+.status-notice {
+  border-left: 0.25rem solid var(--md-default-fg-color--lighter);
+  background: var(--md-code-bg-color);
+  border-radius: 0.1rem;
+  padding: 0.6rem 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.status-notice--alert { border-left-color: #990000; }
+.status-notice--maintenance { border-left-color: #b58500; }
+.status-notice--ongoing { border-left-color: #3f6ec6; }
+
+.status-notice__header {
+  display: flex;
+  gap: 0.75em;
+  align-items: baseline;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.status-notice__type {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  opacity: 0.75;
+}
+
+.status-down,
+.status-error {
+  color: #990000;
+}
+
+.status-ok {
+  color: #2e7d32;
+}
