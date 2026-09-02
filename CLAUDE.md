@@ -18,9 +18,12 @@ credentials) does not belong here.
 ## Current state (as of this handoff)
 
 Done and verified:
-- `scripts/sync_wiki.py` — bare-clones `kumo.wiki.git` and regenerates `docs/` + `mkdocs.yml`
+- `scripts/sync_wiki.ps1` — bare-clones `kumo.wiki.git` and regenerates `docs/` + `mkdocs.yml`
   from the wiki's markdown on every run. The wiki is the single source of truth; nothing in
-  `docs/` or `mkdocs.yml` should be hand-edited (both are gitignored, build artifacts).
+  `docs/` or `mkdocs.yml` should be hand-edited (both are gitignored, build artifacts). Written
+  in PowerShell rather than Python since that's what the team already uses elsewhere — MkDocs
+  itself is still a Python tool, but it's depended on as-is, not something anyone needs to read
+  or write Python to maintain.
 - `branding/assets/iu-theme.css` — placeholder IU crimson theme for mkdocs-material.
   **Not verified against IU's actual brand toolkit (brand.iu.edu)** — flagged in the file, do
   this before launch.
@@ -59,6 +62,11 @@ Not started yet:
   built-in search, easy IU theme override via `extra_css`.
 - **Auto-sync from the wiki, not a one-time import.** The wiki stays the editorial source of
   truth; this repo is a presentation layer regenerated from it, so the two never drift apart.
+- **PowerShell for `sync_wiki`, not Python**, even though the site's build tool (MkDocs) is
+  Python. A reviewer flagged that requiring Python knowledge to maintain the one piece of
+  custom logic in this repo was a real barrier for a team that otherwise works in .NET/
+  PowerShell; ported it so nobody has to learn a new language just to touch nav ordering or
+  link rewriting.
 
 ## Gotchas hit — read before repeating the debugging
 
@@ -66,31 +74,39 @@ Not started yet:
    `Broadcast-Setup:-Agent.md`), which NTFS can't create. A normal `git clone` of
    `kumo.wiki.git` fails on Windows with "invalid path" / "unable to checkout working tree".
    Fix: clone `--bare` and read files via `git show HEAD:<path>` — never check the wiki repo
-   out to a working tree. `sync_wiki.py` already does this.
+   out to a working tree. `sync_wiki.ps1` already does this.
 2. **`[[Display|Target#anchor]]` wikilinks need the anchor split off before slugifying the
    target**, or you get mangled links like `page#anchor.md` instead of `page.md#anchor`. Fixed
-   in `sync_wiki.py`'s `wikilink()` — if touching that function again, re-verify against
+   in `sync_wiki.ps1`'s `Update-Links` — if touching that again, re-verify against
    `service-plan.md`'s Box/Dropbox/Google Drive links after rebuilding.
 3. **YAML nav titles can't contain raw colons** — several wiki page names do (e.g. "Client
-   Setup: Windows"). `sync_wiki.py` strips `:`/`-` into spaces for display titles and quotes
+   Setup: Windows"). `sync_wiki.ps1` strips `:`/`-` into spaces for display titles and quotes
    every nav entry defensively.
-4. **`git show` output must be decoded as UTF-8 explicitly** — relying on `subprocess`'s
-   locale-default text mode hit a `UnicodeDecodeError` (cp1252) on at least one wiki page on
-   Windows. Fixed by decoding stdout bytes as UTF-8 with `errors="replace"`.
-5. **A few links in the *source wiki content itself* are already broken** (not sync-script
+4. **PowerShell hashtables don't preserve enumeration order** (unlike Python dicts), and .NET's
+   default string hashing is randomized per process — so building the nav by iterating a
+   hashtable's `.Keys` produces a different, shuffling order on every run. `Get-Nav` explicitly
+   `Sort-Object`s the stems before iterating; if the nav order ever looks random from one build
+   to the next, this is why.
+5. **`git show` output needs explicit UTF-8 handling** — a wiki page hit encoding issues on
+   Windows without it. Fixed by setting `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8`
+   at the top of `sync_wiki.ps1`, and writing output files via `[System.IO.File]::WriteAllText`
+   with an explicit no-BOM UTF-8 encoding rather than PowerShell's `Set-Content` (which defaults
+   to UTF-8 *with* BOM on Windows PowerShell).
+6. **A few links in the *source wiki content itself* are already broken** (not sync-script
    bugs): `Client-Setup:-Mac-OS-X` links to a `###domain-membership` anchor that doesn't exist,
    `Troubleshooting` links to a stale `client-setup-windows#with-uac-enabled` anchor, and two
    OneDrive anchors are case-mismatched (`#OneDrive` vs generated `#onedrive`). Worth a wiki
    content cleanup pass at some point; not something the sync script should silently paper
    over.
-6. **Python on this dev machine**: `python`/`py` aren't on the plain Bash/git-bash PATH: use
-   the full path `C:\Python311\python.exe`, or PowerShell's `py` launcher. `pip install --user`
-   was needed to sidestep a locked `watchmedo.exe` from a prior partial install.
+7. **Python on this dev machine** (still needed for MkDocs itself, just not for the sync
+   script anymore): `python`/`py` aren't on the plain Bash/git-bash PATH: use the full path
+   `C:\Python311\python.exe`, or PowerShell's `py` launcher. `pip install --user` was needed to
+   sidestep a locked `watchmedo.exe` from a prior partial install.
 
 ## Local dev
 
 ```powershell
-C:\Python311\python.exe scripts\sync_wiki.py   # regenerate docs/ + mkdocs.yml from the wiki
-C:\Python311\python.exe -m mkdocs serve         # preview at http://127.0.0.1:8000
+pwsh scripts\sync_wiki.ps1                        # regenerate docs/ + mkdocs.yml from the wiki
+C:\Python311\python.exe -m mkdocs serve           # preview at http://127.0.0.1:8000
 C:\Python311\python.exe -m mkdocs build --strict  # verify before shipping
 ```
