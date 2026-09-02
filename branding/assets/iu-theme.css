@@ -124,3 +124,8 @@ img.iu-footer-trident {
   background: var(--md-code-bg-color);
   border-left: 0.25rem solid #3f6ec6;
 }
+
+.status-banner--down {
+  background: #990000;
+  color: #fff;
+}
