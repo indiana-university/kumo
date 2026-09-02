@@ -177,10 +177,14 @@ function Get-Nav([string]$HomeMd, [hashtable]$SlugByStem) {
             $nav[$groupName] = $groups[$groupName]
         }
     }
-    # Status is a hand-authored page (pages/status.md), not wiki content --
-    # inserted directly here since it's the only one; worth generalizing into
-    # a proper "extra pages" list if a second one shows up.
-    $nav["Status"] = "status.md"
+    # Status/health are hand-authored pages (pages/*.md), not wiki content --
+    # nested under one "Status" dropdown. File location (docs root), not nav
+    # nesting, determines each page's URL, so this doesn't change
+    # kumo.iu.edu/status or kumo.iu.edu/health.
+    $nav["Status"] = [ordered]@{
+        "IU Cloud Storage" = "status.md"
+        "Kumo Portal"       = "health.md"
+    }
     if ($SlugByStem.Values -contains "contact-us") {
         $nav[$slugToTitle["contact-us"]] = "contact-us.md"
     }
