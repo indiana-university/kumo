@@ -221,6 +221,7 @@ theme:
   name: material
   custom_dir: overrides
   logo: assets/iu-trident.svg
+  favicon: assets/favicon.ico
   palette:
     primary: custom
     accent: custom
