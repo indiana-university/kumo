@@ -45,3 +45,87 @@ img.iu-footer-trident {
   opacity: 1;
   text-decoration: underline;
 }
+
+/* Status page: one collapsible <details> section per notice type. */
+.status-section {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.2rem;
+  padding: 0.5rem 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.status-section summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.status-count {
+  display: inline-block;
+  min-width: 1.4em;
+  text-align: center;
+  background: var(--md-default-fg-color--lighter);
+  color: var(--md-default-bg-color);
+  border-radius: 1rem;
+  padding: 0 0.4em;
+  font-size: 0.75rem;
+}
+
+/* Notice cards inside a section, colored by notice type. */
+.status-notice {
+  border-left: 0.25rem solid var(--md-default-fg-color--lighter);
+  background: var(--md-code-bg-color);
+  border-radius: 0.1rem;
+  padding: 0.6rem 1rem;
+  margin: 0.75rem 0 0;
+}
+
+.status-notice--alert { border-left-color: #990000; }
+.status-notice--maintenance { border-left-color: #b58500; }
+.status-notice--ongoing { border-left-color: #3f6ec6; }
+
+.status-notice__header {
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.status-notice__dates {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: 0.4rem;
+}
+
+.status-error {
+  color: #990000;
+}
+
+.status-ok {
+  color: #2e7d32;
+}
+
+/* Full-width banners for the status page's overall messages, matching the
+   legacy status page's green "all good" / blue "info" boxes. */
+.status-banner {
+  border-radius: 0.2rem;
+  padding: 0.75rem 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.status-banner a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.status-banner--ok {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.status-banner--info {
+  background: var(--md-code-bg-color);
+  border-left: 0.25rem solid #3f6ec6;
+}
+
+.status-banner--down {
+  background: #990000;
+  color: #fff;
+}

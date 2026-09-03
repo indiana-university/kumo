@@ -20,6 +20,7 @@ $DocsDir = Join-Path $RepoRoot "docs"
 $ImgSrc = Join-Path $RepoRoot "img"
 $BrandingAssetsSrc = Join-Path $RepoRoot "branding\assets"
 $CnameSrc = Join-Path $RepoRoot "branding\CNAME"
+$PagesSrc = Join-Path $RepoRoot "pages"
 
 $SkipFiles = @(
     "_Sidebar.md", "_Footer.md", "Home.md",
@@ -176,6 +177,14 @@ function Get-Nav([string]$HomeMd, [hashtable]$SlugByStem) {
             $nav[$groupName] = $groups[$groupName]
         }
     }
+    # Status/health are hand-authored pages (pages/*.md), not wiki content --
+    # nested under one "Status" dropdown. File location (docs root), not nav
+    # nesting, determines each page's URL, so this doesn't change
+    # kumo.iu.edu/status or kumo.iu.edu/health.
+    $nav["Status"] = [ordered]@{
+        "IU Cloud Storage" = "status.md"
+        "Kumo Portal"       = "health.md"
+    }
     if ($SlugByStem.Values -contains "contact-us") {
         $nav[$slugToTitle["contact-us"]] = "contact-us.md"
     }
@@ -212,6 +221,7 @@ theme:
   name: material
   custom_dir: overrides
   logo: assets/iu-trident.svg
+  favicon: assets/favicon.ico
   palette:
     primary: custom
     accent: custom
@@ -256,6 +266,7 @@ $homeRaw = if ($files.ContainsKey("Home.md")) { $files["Home.md"] } else { "" }
 if (Test-Path $ImgSrc) { Copy-Item -Path $ImgSrc -Destination (Join-Path $DocsDir "img") -Recurse }
 if (Test-Path $BrandingAssetsSrc) { Copy-Item -Path $BrandingAssetsSrc -Destination (Join-Path $DocsDir "assets") -Recurse }
 if (Test-Path $CnameSrc) { Copy-Item -Path $CnameSrc -Destination (Join-Path $DocsDir "CNAME") }
+if (Test-Path $PagesSrc) { Copy-Item -Path (Join-Path $PagesSrc "*.md") -Destination $DocsDir }
 
 Write-MkDocsYml (Get-Nav $homeRaw $slugByStem)
 
